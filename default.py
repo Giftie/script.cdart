@@ -63,6 +63,7 @@ class unaccented_map(dict):
     ##
     # Maps a unicode character code (the key) to a replacement code
     # (either a character code or a unicode string).
+
     def mapchar(self, key):
         ch = self.get(key)
         if ch is not None:
@@ -78,8 +79,16 @@ class unaccented_map(dict):
         self[key] = ch
         return ch
 
-class Main:
+    #if sys.version >= "2.5":
+    #    # use __missing__ where available
+    #    __missing__ = mapchar
+    #else:
+        # otherwise, use standard __getitem__ hook (this is slower,
+        # since it's called for each character)
+    __getitem__ = mapchar
+    
 
+class Main:
     def __init__( self ):
         #RunScript(script.cdart,$INFO[ListItem.Artist],$INFO[ListItem.Album],$INFO[ListItem.Path])
         #   argv[1] = Artist Name
@@ -88,7 +97,9 @@ class Main:
         artist = sys.argv[ 1 ]
         album = sys.argv[ 2 ]
         path = sys.argv[ 3 ]
-        self.start_script( artist, album, path ) 
+        self.start_script( artist, album, path )
+
+    
     
     def get_html_source( self , url ):
         """ fetch the html source """
@@ -296,6 +307,7 @@ class Main:
         album_selection=[]
         select = None
         pDialog.create(__language__(32027) )
+        artist = translate_string(artist)
         message = [ "No Matches Found", "Why not try your hand at creating one", "And submit it to XBMCSTUFF.COM", ""]
         print "#  Artist: %s" % artist
         print "#  Album: %s" % original_album
