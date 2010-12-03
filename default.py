@@ -1,10 +1,10 @@
 __scriptname__    = "cdART Single Shot script"
 __scriptID__      = "script.cdart"
 __author__        = "Giftie"
-__version__       = "1.0.0"
+__version__       = "1.0.1"
 __credits__       = "Ppic, Reaven, Imaginos"
 __XBMC_Revision__ = "32000"
-__date__          = "01-08-10"
+__date__          = "12-02-10"
 
 import urllib
 import sys
@@ -151,7 +151,7 @@ class Main:
                 #print search_xml
                 match = re.search('<message>(.*?)</message>', search_xml )    
                 if match:
-                    print "#          Artist(part name): %s  not found on xbmcstuff.com" % part
+                    print "#          Artist(part name): %s  not found on xbmcstuff.com" % repr(part)
                 elif len(part) == 1 or part in ["the","le","de"]:
                     pass
                 else: 
@@ -262,8 +262,8 @@ class Main:
 
     def download_cdart( self, url_cdart , path, title ):
         print "#  Url: %s" % url_cdart
-        print "#  path: %s" % path
-        print "#  Album: %s" % title
+        print "#  path: %s" % repr(path)
+        print "#  Album: %s" % repr(title)
         destination = os.path.join( path.replace("\\\\" , "\\") , "cdart.png") 
         download_success = 0
         pDialog.create(__language__(32047) )
@@ -309,11 +309,11 @@ class Main:
         pDialog.create(__language__(32027) )
         artist = translate_string(artist)
         message = [ "No Matches Found", "Why not try your hand at creating one", "And submit it to XBMCSTUFF.COM", ""]
-        print "#  Artist: %s" % artist
-        print "#  Album: %s" % original_album
-        print "#  Path: %s" % path
-        path_match = re.search( ".*(CD \d|CD\d|Disc\d|Disc \d)." , path, re.I)
-        title_match = re.search( ".*(CD \d|CD\d|Disc\d|Disc \d)" , original_album, re.I)
+        print "#  Artist: %s" % repr(artist)
+        print "#  Album: %s" % repr(original_album)
+        print "#  Path: %s" % (repr(path)
+        path_match = re.search( ".*(CD \d|CD\d|Disc\d|Disc \d|Part\d|Part \d|CD \dd|CD\dd|Disc\dd|Disc \dd|Part\dd|Part \dd)." , path, re.I)
+        title_match = re.search( ".*(CD \d|CD\d|Disc\d|Disc \d|Part\d|Part \d|CD \dd|CD\dd|Disc\dd|Disc \dd|Part\dd|Part \dd)" , original_album, re.I)
         if title_match:
             print "#     Title has CD count"
             album = original_album
@@ -321,8 +321,8 @@ class Main:
             if path_match:
                 print "#     Path has CD count"
                 print "#        %s" % path_match.group(1)
-                album = "%s - %s" % (original_album, path_match.group(1))
-                print "#     New Album Title: %s" % album
+                album = "%s - %s" % (repr(original_album), path_match.group(1))
+                print "#     New Album Title: %s" % repr(album)
             else:
                 album = original_album
         distant_artist = str.lower(self.get_html_source( artist_url ))
